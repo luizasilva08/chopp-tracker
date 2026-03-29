@@ -1,1 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal Cervejaria - Login</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100vh;
+    }
 
+    /* --- ESTILOS DO LOGIN --- */
+    #tela-login {
+      background: white;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      margin-top: 100px;
+      width: 300px;
+      text-align: center;
+    }
+    #tela-login input {
+      width: 90%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    #tela-login button {
+      width: 100%;
+      padding: 10px;
+      background-color: #F2C94C;
+      color: #333;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    #mensagem-erro {
+      color: red;
+      font-size: 14px;
+      margin-top: 10px;
+      display: none;
+    }
+
+    /* --- ESTILOS DO DASHBOARD (OCULTO POR PADRÃO) --- */
+    #tela-dashboard {
+      display: none; /* Começa escondido */
+      width: 100%;
+      height: 100%;
+    }
+    .header-dash {
+      background-color: #333;
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .btn-sair {
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    iframe {
+      width: 100%;
+      height: calc(100vh - 65px); /* Ocupa o resto da tela abaixo do header */
+      border: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="tela-login">
+    <h2>🍺 Acesso ao Sistema</h2>
+    <p>Insira as suas credenciais</p>
+    
+    <input type="text" id="usuario" placeholder="Nome de Usuário">
+    <input type="password" id="senha" placeholder="Senha">
+    
+    <button onclick="fazerLogin()">Entrar</button>
+    <p id="mensagem-erro">Usuário ou senha incorretos!</p>
+  </div>
+
+  <div id="tela-dashboard">
+    <div class="header-dash">
+      <div id="info-usuario">Bem-vindo, Carregando...</div>
+      <button class="btn-sair" onclick="fazerLogout()">Sair (Logout)</button>
+    </div>
+    
+    <iframe 
+      title="Dashboard Cervejaria" 
+      src="https://app.powerbi.com/view?r=eyJrIjoiYmViMTE3MTItYTlhNS00OWRmLTkzZWEtYTg3NDBiZWNiMjliIiwidCI6IjJjZjdkNGQ1LWJkMWItNDk1Ni1hY2Y4LTI5OTUzOTliMjE2OCJ9" 
+      allowFullScreen="true">
+    </iframe>
+  </div>
+
+  <script>
+    // ⚠️ AVISO: Banco de dados simulado no Front-end (Apenas para protótipo)
+    const bancoDeUsuarios = {
+      "admin": { senha: "123", cargo: "Administrador Geral", nome: "Chefão" },
+      "joao": { senha: "456", cargo: "Gestor de Produção", nome: "João" },
+      "pedro": { senha: "789", cargo: "Técnico de Chão de Fábrica", nome: "Pedro" }
+    };
+
+    function fazerLogin() {
+      const userDigitado = document.getElementById("usuario").value.toLowerCase();
+      const senhaDigitada = document.getElementById("senha").value;
+      const erroEl = document.getElementById("mensagem-erro");
+
+      // Verifica se o usuário existe e a senha bate
+      if (bancoDeUsuarios[userDigitado] && bancoDeUsuarios[userDigitado].senha === senhaDigitada) {
+        const dadosUsuario = bancoDeUsuarios[userDigitado];
+        
+        // Esconde o Login e Mostra o Dashboard
+        document.getElementById("tela-login").style.display = "none";
+        document.getElementById("tela-dashboard").style.display = "block";
+        
+        // Atualiza a barra superior com o Cargo
+        document.getElementById("info-usuario").innerHTML = 
+          `<b>Bem-vindo, ${dadosUsuario.nome}</b> | Nível de Acesso: <i>${dadosUsuario.cargo}</i>`;
+          
+        erroEl.style.display = "none";
+      } else {
+        // Mostra erro
+        erroEl.style.display = "block";
+      }
+    }
+
+    function fazerLogout() {
+      // Limpa os campos
+      document.getElementById("usuario").value = "";
+      document.getElementById("senha").value = "";
+      
+      // Esconde o Dashboard e Mostra o Login
+      document.getElementById("tela-dashboard").style.display = "none";
+      document.getElementById("tela-login").style.display = "block";
+    }
+  </script>
+
+</body>
+</html>
